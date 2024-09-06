@@ -25,9 +25,13 @@ main {
 
 #output_screen {
     margin-bottom: 1rem;
-    font-size: 3rem;
     border: 2px solid black;
     padding: 1rem;
+}
+
+#output_screen>p {
+    font-size: 3rem;
+    font-weight: 800;
 }
 
 #button_wrapper {
@@ -40,6 +44,7 @@ main {
 
 #button_wrapper>button {
     padding: 1.5em;
+    border: 0.5px solid black;
     border-radius: 0.2rem;
     font-size: 1rem;
     font-weight: 600;
