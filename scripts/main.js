@@ -1,3 +1,5 @@
+import { stack } from './stack.js'; 
+
 const output_screen = document.querySelector("#output_screen > p");
 const buttons = document.querySelectorAll(".btn_class");
 
@@ -40,7 +42,7 @@ document.addEventListener("keydown", (event) => {
     const value = map[key];
     if (!value) {
         return;
-    } else if (value === "Backspace") {
+    } else if (value === "delete") {
         deleteOutput();
         return;
     } else if (value === "clear") {
