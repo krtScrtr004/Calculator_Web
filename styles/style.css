@@ -4,7 +4,9 @@
     box-sizing: border-box;
 }
 
-:root, body, main {
+:root,
+body,
+main {
     height: 100%;
     width: 100%;
     font-family: sans-serif;
@@ -16,7 +18,7 @@ main {
 }
 
 .wrapper {
-    width: 60%;
+    width: 80%;
     height: 70%;
     display: block;
 }
@@ -31,9 +33,17 @@ main {
 #button_wrapper {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 0.3rem;
+    padding: 0.3rem;
     border: 1px solid black;
 }
 
+#button_wrapper>button {
+    padding: 1.5em;
+    border-radius: 0.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
 
 #equal_btn {
     grid-column: 4 / 5;
