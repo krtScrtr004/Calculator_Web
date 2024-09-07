@@ -60,9 +60,8 @@ document.addEventListener("keydown", (event) => {
 
 function appendToOutput(value) {
   // Prevent consecutive operators
-  const isNum = /^[0-9]$/;
   if (
-      !isNum.test(output_screen.textContent.slice(-1)) &&
+      !isOperand(output_screen.textContent.slice(-1)) &&
       isOperator(value)
   ) {
       return;
@@ -80,6 +79,11 @@ function deleteOutput() {
 
 function isOperator(op) {
   return ["+", "-", "*", "/"].includes(op);
+}
+
+function isOperand(oprnd) {
+  const isNum = /^[0-9]$/;
+  return isNum.test(oprnd);
 }
 
 function precedence(op) {
@@ -113,3 +117,10 @@ function evaluate(oprnd_1, oprnd_2, op) {
       throw new Error("Invalid operator");
   }
 }
+
+// function infixToPostfix() {
+  // let postFix;
+  // const stk = stack();
+
+  // for ()
+  
