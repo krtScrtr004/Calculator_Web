@@ -23,12 +23,7 @@ delete_btn.addEventListener("click", () => {
 });
 
 // Equal button handler
-equal_btn.addEventListener("click", () => {
-  let postFix = infixToPostfix();
-  console.log(postFix);
-  let res = calculate(postFix);
-  output_screen.textContent = res.toString();
-});
+equal_btn.addEventListener("click", displayResult);
 
 // Keyboard handler
 document.addEventListener("keydown", (event) => {
@@ -52,7 +47,7 @@ document.addEventListener("keydown", (event) => {
       clearOutput();
       return;
   } else if (value === "=") {
-      // Calculate
+      displayResult();
       return;
   } 
 
@@ -62,7 +57,9 @@ document.addEventListener("keydown", (event) => {
 // UTILITY FUNCTIONS
 
 function displayResult() {
-  
+  let postFix = infixToPostfix();
+  let res = calculate(postFix);
+  output_screen.textContent = postFix;
 }
 
 function appendToOutput(value) {
@@ -141,7 +138,7 @@ function infixToPostfix() {
     // If is an operator
     } else if (isOperator(output_screen.textContent[i])) {
       // If stack top has higher precedence
-      while (!stk.isEmpty && precedence(stk.top, output_screen.textContent[i])) {
+      while (!stk.isEmpty && precedence(stk.top) >= precedence(output_screen.textContent[i])) {
         postFix += `${stk.top} `;
         stk.pop();
       }
@@ -149,7 +146,6 @@ function infixToPostfix() {
     }
   }
 
-  console.log(stk.elems);
   // Pop remaining operators from stack
   while (!stk.isEmpty) {
     postFix += `${stk.top} `;
@@ -161,13 +157,13 @@ function infixToPostfix() {
 
 function calculate(postFix) {
   const stk = stack();
-  for (let i = 0; i < postFix.length; ++i) {
+  for (let i = 0, n = postFix.length; i < n; ++i) {
     if (postFix[i] === ' ') {
       continue;
     } else if (isOperand(postFix[i])) {
-      let operand;
+      let operand = '';
       // Append numbers and decimal point until postFix[i] is an operand
-      while (i < n && isOperand(postFix[i]) && postFix[i] !== ' ') {
+      while (i < n && ((isOperand(postFix[i]) && postFix[i] !== ' ') || postFix[i] === '.')) {
         operand += postFix[i];
         ++i;
       }
@@ -189,3 +185,6 @@ function calculate(postFix) {
   // result of evaluating the whole expression
   return stk.top;
 }
+
+output_screen.textContent = '12-89.21+123/23.11+12*23';
+const result = displayResult();
