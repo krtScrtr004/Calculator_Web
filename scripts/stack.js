@@ -18,7 +18,7 @@ export function stack(...args) {
       }
 
       arr.pop();
-      size++;
+      size--;
     },
 
     get top() {
@@ -36,5 +36,9 @@ export function stack(...args) {
     get isFull() {
       return size >= MAX_STACK_SIZE;
     },
+
+    get elems() {
+      return [...arr];
+    }
   };
 }
