@@ -63,7 +63,7 @@ function appendToOutput(value) {
     const isNum = /^[0-9]$/;
     if (
         !isNum.test(output_screen.textContent.slice(-1)) &&
-        ["+", "-", "*", "/"].includes(value)
+        isOperator(value)
     ) {
         return;
     }
@@ -76,4 +76,8 @@ function clearOutput() {
 
 function deleteOutput() {
     output_screen.textContent = output_screen.textContent.slice(0, -1);
+}
+
+function isOperator(op) {
+    return ["+", "-", "*", "/"].includes(op);
 }
