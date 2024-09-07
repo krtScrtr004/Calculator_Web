@@ -118,9 +118,35 @@ function evaluate(oprnd_1, oprnd_2, op) {
   }
 }
 
-// function infixToPostfix() {
-  // let postFix;
-  // const stk = stack();
+function infixToPostfix() {
+  let postFix;
+  const stk = stack();
 
-  // for ()
-  
+  for (let i = 0; i < output_screen.length; i++) {
+    // If is a number or a decimal point
+    if (isOperand(output_screen[i]) || output_screen[i] === '.') {
+      while (i < output_screen.length && (output_screen[i]) || output_screen[i] === '.') {
+        postFix += output_screen[i];
+        ++i;
+      }
+      postFix += ' ';
+      --i;
+    // If is an operator
+    } else if (isOperator(output_screen[i])) {
+      // If stack top has higher precedence
+      while (!stk.isEmpty() && precedence(stk.top, output_screen[i])) {
+        postFix += `${stk.top} `;
+        stk.pop();
+      }
+      stk.push(output_screen[i]);
+    }
+  }
+
+  // Pop remaining operators from stack
+  while (!stk.isEmpty()) {
+    postFix += `${stk.top} `;
+    stk.pop();
+  }
+
+  return postFix;
+}
