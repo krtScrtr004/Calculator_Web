@@ -13,14 +13,10 @@ buttons.forEach((button) => {
 });
 
 // Clear button handler
-clear_btn.addEventListener("click", () => {
-  clearOutput();
-});
+clear_btn.addEventListener("click", clearOutput);
 
 // Delete button handler
-delete_btn.addEventListener("click", () => {
-  deleteOutput();
-});
+delete_btn.addEventListener("click", deleteOutput);
 
 // Equal button handler
 equal_btn.addEventListener("click", displayResult);
@@ -58,8 +54,12 @@ document.addEventListener("keydown", (event) => {
 
 function displayResult() {
   let postFix = infixToPostfix();
-  let res = calculate(postFix);
-  output_screen.textContent = postFix;
+  try {
+    let res = calculate(postFix);  
+    output_screen.textContent = res.toString();
+  } catch (e) {
+    output_screen.textContent = e.message;
+  }
 }
 
 function appendToOutput(value) {
@@ -173,11 +173,15 @@ function calculate(postFix) {
         break;
       }
 
-      const oprnd_2 = stk.top;
-      stk.pop()
       const oprnd_1 = stk.top;
       stk.pop()
-      stk.push(evaluate(oprnd_1, oprnd_2, postFix[i]));
+      const oprnd_2 = stk.top;
+      stk.pop()
+      try {
+        stk.push(evaluate(oprnd_1, oprnd_2, postFix[i]));
+      } catch (e) {
+        throw e;
+      };
     }
   }
 
@@ -185,6 +189,3 @@ function calculate(postFix) {
   // result of evaluating the whole expression
   return stk.top;
 }
-
-output_screen.textContent = '12-89.21+123/23.11+12*23';
-const result = displayResult();
