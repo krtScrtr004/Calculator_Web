@@ -150,3 +150,34 @@ function infixToPostfix() {
 
   return postFix;
 }
+
+function calculate(postFix) {
+  const stk = stack();
+  for (let i = 0, n = postFix.length; i < n; ++i) {
+    if (postFix[i] === ' ') {
+      continue;
+    } else if (isOperand(postFix[i])) {
+      let operand;
+      // Append numbers and decimal point until postFix[i] is an operand
+      while (i < n && isOperand(postFix[i]) && postFix[i] !== ' ') {
+        operand += postFix[i];
+        ++i;
+      }
+      stk.push(parseFloat(operand));
+    } else if (isOperator(postFix[i])) {
+      if (stk.size === 1) {
+        break;
+      }
+
+      const oprnd_2 = stk.top;
+      stk.pop()
+      const oprnd_1 = stk.top;
+      stk.pop()
+      stk.push(evaluate(oprnd_1, oprnd_2, postFix[i]));
+    }
+  }
+
+  // Return the last elem inn stack which is the 
+  // result of evaluating the whole expression
+  return stk.top;
+}
