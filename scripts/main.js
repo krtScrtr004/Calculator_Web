@@ -24,7 +24,7 @@ delete_btn.addEventListener("click", () => {
 
 // Equal button handler
 equal_btn.addEventListener("click", () => {
-    // Calculate
+  displayResult();
 });
 
 // Keyboard handler
@@ -57,6 +57,11 @@ document.addEventListener("keydown", (event) => {
 });
 
 // UTILITY FUNCTIONS
+
+function displayResult() {
+  let res = calculate(infixToPostfix());
+  output_screen.textContents = res.toString();
+}
 
 function appendToOutput(value) {
   // Prevent consecutive operators
