@@ -129,7 +129,8 @@ function infixToPostfix() {
   for (let i = 0, n = output_screen.textContent.length; i < n; i++) {
     // If is a number or a decimal point
     if (isOperand(output_screen.textContent[i]) || output_screen.textContent[i] === '.') {
-      while (i < output_screen.textContent.length && (isOperand(output_screen.textContent[i])) || output_screen.textContent[i] === '.') {
+      while (i < output_screen.textContent.length && (isOperand(output_screen.textContent[i])) 
+              || output_screen.textContent[i] === '.') {
         postFix += output_screen.textContent[i];
         ++i;
       }
@@ -174,9 +175,9 @@ function calculate(postFix) {
       }
 
       const oprnd_1 = stk.top;
-      stk.pop()
+      stk.pop();
       const oprnd_2 = stk.top;
-      stk.pop()
+      stk.pop();
       try {
         stk.push(evaluate(oprnd_1, oprnd_2, postFix[i]));
       } catch (e) {

@@ -21,6 +21,10 @@ export function stack(...args) {
       size--;
     },
 
+    get elems() {
+      return [...arr];
+    },
+
     get top() {
       return arr[size - 1];
     },
@@ -35,10 +39,6 @@ export function stack(...args) {
 
     get isFull() {
       return size >= MAX_STACK_SIZE;
-    },
-
-    get elems() {
-      return [...arr];
     }
   };
 }
