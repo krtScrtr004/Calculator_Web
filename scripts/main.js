@@ -1,7 +1,7 @@
 import { stack } from './stack.js'; 
 
 const output_screen = document.querySelector("#output_screen > input");
-const buttons = document.querySelectorAll(".btn_class");
+const buttons = document.querySelectorAll("#button_wrapper button");
 
 // EVENT HANDLERS
 
@@ -113,8 +113,8 @@ function evaluate(oprnd_1, oprnd_2, op) {
     case "*":
       return oprnd_1 * oprnd_2;
     case "/":
-      if (oprnd_2 === 0) {
-        throw new Error("Division by zero");
+      if (oprnd_1 === 0 || oprnd_2 === 0) {
+        throw new Error("Division to / by zero");
       }
       return oprnd_2 / oprnd_1;
     default:
