@@ -1,3 +1,5 @@
+// Error when pressing enter on an empty expression
+
 import { stack } from './stack.js'; 
 
 const output_screen = document.querySelector("#output_screen > input");
