@@ -18,9 +18,12 @@ main {
 }
 
 .wrapper {
-    width: 80%;
-    height: 70%;
-    display: block;
+    width: 350px;
+    height: 550px;
+    display: grid;
+    place-items: center;
+    padding: 1em;
+    border: 1px solid black;
 }
 
 #output_screen {
@@ -39,6 +42,7 @@ main {
 }
 
 #button_wrapper {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.3rem;
