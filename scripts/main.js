@@ -2,6 +2,7 @@ import { stack } from './stack.js';
 
 const output_screen = document.querySelector("#output_screen > input");
 const buttons = document.querySelectorAll("#button_wrapper button");
+const input_cursor = document.querySelector('#input_cursor');
 
 // EVENT HANDLERS
 
@@ -52,15 +53,11 @@ document.addEventListener("keydown", (event) => {
 
 // UTILITY FUNCTIONS
 
-function displayResult() {
-  let postFix = infixToPostfix();
-  try {
-    let res = calculate(postFix);  
-    output_screen.value = res.toString();
-  } catch (e) {
-    output_screen.value = e.message;
-  }
+// Automatically scroll the input view to the end
+function scrollToEnd() {
+  input_cursor.scrollLeft = input_cursor.scrollWidth;
 }
+
 
 function appendToOutput(value) {
   // Prevent consecutive operators
@@ -71,6 +68,7 @@ function appendToOutput(value) {
       return;
   }
   output_screen.value += value;
+  scrollToEnd();  
 }
 
 function clearOutput() {
@@ -189,4 +187,14 @@ function calculate(postFix) {
   // Return the last elem inn stack which is the 
   // result of evaluating the whole expression
   return stk.top;
+}
+
+function displayResult() {
+  let postFix = infixToPostfix();
+  try {
+    let res = calculate(postFix);  
+    output_screen.value = res.toString();
+  } catch (e) {
+    output_screen.value = e.message;
+  }
 }
