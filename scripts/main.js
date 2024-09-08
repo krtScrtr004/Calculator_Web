@@ -1,4 +1,5 @@
 // Error when pressing enter on an empty expression
+// Allow plus and minus signs when there are no operands before
 
 import { stack } from './stack.js'; 
 
