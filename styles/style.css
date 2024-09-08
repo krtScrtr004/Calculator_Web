@@ -24,12 +24,16 @@ main {
 }
 
 #output_screen {
+    height: 100px;
     margin-bottom: 1rem;
     border: 2px solid black;
-    padding: 1rem;
+    overflow: auto hidden;
 }
 
-#output_screen>p {
+#output_screen>input {
+    width: 100%;
+    height: 100%;
+    padding: 0 0.5rem;
     font-size: 3rem;
     font-weight: 800;
 }

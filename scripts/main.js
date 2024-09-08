@@ -1,6 +1,6 @@
 import { stack } from './stack.js'; 
 
-const output_screen = document.querySelector("#output_screen > p");
+const output_screen = document.querySelector("#output_screen > input");
 const buttons = document.querySelectorAll(".btn_class");
 
 // EVENT HANDLERS
@@ -56,29 +56,29 @@ function displayResult() {
   let postFix = infixToPostfix();
   try {
     let res = calculate(postFix);  
-    output_screen.textContent = res.toString();
+    output_screen.value = res.toString();
   } catch (e) {
-    output_screen.textContent = e.message;
+    output_screen.value = e.message;
   }
 }
 
 function appendToOutput(value) {
   // Prevent consecutive operators
   if (
-      !isOperand(output_screen.textContent.slice(-1)) &&
+      !isOperand(output_screen.value.slice(-1)) &&
       isOperator(value)
   ) {
       return;
   }
-  output_screen.textContent += value;
+  output_screen.value += value;
 }
 
 function clearOutput() {
-  output_screen.textContent = "";
+  output_screen.value = "";
 }
 
 function deleteOutput() {
-  output_screen.textContent = output_screen.textContent.slice(0, -1);
+  output_screen.value = output_screen.value.slice(0, -1);
 }
 
 function isOperator(op) {
@@ -126,24 +126,24 @@ function infixToPostfix() {
   let postFix = '';
   const stk = stack();
 
-  for (let i = 0, n = output_screen.textContent.length; i < n; i++) {
+  for (let i = 0, n = output_screen.value.length; i < n; i++) {
     // If is a number or a decimal point
-    if (isOperand(output_screen.textContent[i]) || output_screen.textContent[i] === '.') {
-      while (i < output_screen.textContent.length && (isOperand(output_screen.textContent[i])) 
-              || output_screen.textContent[i] === '.') {
-        postFix += output_screen.textContent[i];
+    if (isOperand(output_screen.value[i]) || output_screen.value[i] === '.') {
+      while (i < output_screen.value.length && (isOperand(output_screen.value[i])) 
+              || output_screen.value[i] === '.') {
+        postFix += output_screen.value[i];
         ++i;
       }
       postFix += ' ';
       --i;
     // If is an operator
-    } else if (isOperator(output_screen.textContent[i])) {
+    } else if (isOperator(output_screen.value[i])) {
       // If stack top has higher precedence
-      while (!stk.isEmpty && precedence(stk.top) >= precedence(output_screen.textContent[i])) {
+      while (!stk.isEmpty && precedence(stk.top) >= precedence(output_screen.value[i])) {
         postFix += `${stk.top} `;
         stk.pop();
       }
-      stk.push(output_screen.textContent[i]);
+      stk.push(output_screen.value[i]);
     }
   }
 
