@@ -24,6 +24,7 @@ main {
     place-items: center;
     padding: 1em;
     border: 1px solid black;
+    border-radius: 3px;
 }
 
 #output_screen {
@@ -46,8 +47,6 @@ main {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 0.3rem;
-    padding: 0.3rem;
-    border: 1px solid black;
 }
 
 #button_wrapper>button {
