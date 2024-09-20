@@ -1,55 +1,67 @@
-// Error when pressing enter on an empty expression
-// Allow plus and minus signs when there are no operands before
+// TODO: Allow minus sign when there are no operands before - DONE
+// TODO: Change consecutive operators
+// FIXME: Add the delete button functionality
 
-import { stack } from './stack.js'; 
+import { stack } from "./stack.js";
 
 const output_screen = document.querySelector("#output_screen > input");
 const buttons = document.querySelectorAll("#button_wrapper button");
-const input_cursor = document.querySelector('#input_cursor');
+const input_expr = document.querySelector("#input_expr");
 
 // EVENT HANDLERS
 
 // Click handler for buttons
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
-      appendToOutput(button.value);
+    appendToOutput(button.value);
   });
 });
 
 // Clear button handler
 clear_btn.addEventListener("click", clearOutput);
 
-// Delete button handler
-delete_btn.addEventListener("click", deleteOutput);
-
 // Equal button handler
 equal_btn.addEventListener("click", displayResult);
 
 // Keyboard handler
 document.addEventListener("keydown", (event) => {
-  // Map keys values to pressed keys
-  const map = {
-      0: "0", 1: "1", 2: "2", 3: "3", 4: "4",
-      5: "5", 6: "6", 7: "7", 8: "8", 9: "9",
-      ".": ".", "+": "+", "-": "-", "*": "*",
-      "/": "/", Enter: "=", Backspace: "delete",
-      Escape: "clear",
+  // Map key values to pressed keys
+  const pairs = {
+    0: "0",
+    1: "1",
+    2: "2",
+    3: "3",
+    4: "4",
+    5: "5",
+    6: "6",
+    7: "7",
+    8: "8",
+    9: "9",
+    ".": ".",
+    "+": "+",
+    "-": "-",
+    "*": "*",
+    "/": "/",
+    Enter: "=",
+    Backspace: "delete",
+    Escape: "clear",
   };
 
   const key = event.key;
-  const value = map[key];
+  const value = pairs[key];
   if (!value) {
-      return;
+    output_screen.value += "";
+    return;
   } else if (value === "delete") {
-      deleteOutput();
-      return;
+    deleteOutput();
+    return;
   } else if (value === "clear") {
-      clearOutput();
-      return;
+    clearOutput();
+    return;
   } else if (value === "=") {
-      displayResult();
-      return;
-  } 
+    displayResult();
+    return;
+  }
 
   appendToOutput(value);
 });
@@ -58,20 +70,16 @@ document.addEventListener("keydown", (event) => {
 
 // Automatically scroll the input view to the end
 function scrollToEnd() {
-  input_cursor.scrollLeft = input_cursor.scrollWidth;
+  input_expr.scrollLeft = input_expr.scrollWidth;
 }
 
-
 function appendToOutput(value) {
-  // Prevent consecutive operators
-  if (
-      !isOperand(output_screen.value.slice(-1)) &&
-      isOperator(value)
-  ) {
-      return;
+  // Prevent two minus signs
+  if ((value === '-' && output_screen.value.slice(-1) === `-`) && isOperator(value)) {
+    return;
   }
   output_screen.value += value;
-  scrollToEnd();  
+  scrollToEnd();
 }
 
 function clearOutput() {
@@ -124,26 +132,48 @@ function evaluate(oprnd_1, oprnd_2, op) {
 }
 
 function infixToPostfix() {
-  let postFix = '';
+  let postFix = "";
   const stk = stack();
 
   for (let i = 0, n = output_screen.value.length; i < n; i++) {
-    // If is a number or a decimal point
-    if (isOperand(output_screen.value[i]) || output_screen.value[i] === '.') {
-      while (i < output_screen.value.length && (isOperand(output_screen.value[i])) 
-              || output_screen.value[i] === '.') {
+    // Allow negative values
+    if ((output_screen.value[i] === "-" && postFix === "") || (isOperator(output_screen.value[i - 1]) &&  output_screen.value[i] === `-`)) {
+      postFix += `(${output_screen.value[i++]}`;
+      while (
+        (i < output_screen.value.length && isOperand(output_screen.value[i])) ||
+        output_screen.value[i] === "."
+      ) {
         postFix += output_screen.value[i];
         ++i;
       }
-      postFix += ' ';
+      postFix += ") ";
       --i;
-    // If is an operator
-    } else if (isOperator(output_screen.value[i])) {
-      // If stack top has higher precedence
-      while (!stk.isEmpty && precedence(stk.top) >= precedence(output_screen.value[i])) {
-        postFix += `${stk.top} `;
-        stk.pop();
+    }
+    // If is a number or a decimal point
+    else if (
+      isOperand(output_screen.value[i]) ||
+      output_screen.value[i] === "."
+    ) {
+      while (
+        (i < output_screen.value.length && isOperand(output_screen.value[i])) ||
+        output_screen.value[i] === "."
+      ) {
+        postFix += output_screen.value[i];
+        ++i;
       }
+      postFix += " ";
+      --i;
+      // If is an operator
+    } else if (isOperator(output_screen.value[i])) {
+        // TODO: handle negative numbers at the middle and end
+        // If stack top has higher precedence
+        while (
+          !stk.isEmpty &&
+          precedence(stk.top) >= precedence(output_screen.value[i])
+        ) {
+          postFix += `${stk.top} `;
+          stk.pop();
+        }
       stk.push(output_screen.value[i]);
     }
   }
@@ -154,20 +184,39 @@ function infixToPostfix() {
     stk.pop();
   }
 
+  console.log(postFix);
   return postFix;
 }
 
 function calculate(postFix) {
   const stk = stack();
   for (let i = 0, n = postFix.length; i < n; ++i) {
-    if (postFix[i] === ' ') {
+    if (postFix[i] === " ") {
       continue;
     } else if (isOperand(postFix[i])) {
-      let operand = '';
+      let operand = "";
       // Append numbers and decimal point until postFix[i] is an operand
-      while (i < n && ((isOperand(postFix[i]) && postFix[i] !== ' ') || postFix[i] === '.')) {
+      while (
+        i < n &&
+        ((isOperand(postFix[i]) && postFix[i] !== " ") || postFix[i] === ".")
+      ) {
         operand += postFix[i];
         ++i;
+      }
+      stk.push(parseFloat(operand));
+    } else if (postFix[i] === `(`) {
+      ++i;  // Skip open parenthesis
+      let operand = ``;
+      while (
+        i < n && (postFix[i] !== " " || postFix[i] === ".") && postFix[i] !== `)`)
+      {
+        if (postFix[i] === `-` || isOperand(postFix[i])){
+          operand += postFix[i]
+        };
+        ++i;
+      }
+      if (postFix[i] === ")") {
+        i++;
       }
       stk.push(parseFloat(operand));
     } else if (isOperator(postFix[i])) {
@@ -183,19 +232,23 @@ function calculate(postFix) {
         stk.push(evaluate(oprnd_1, oprnd_2, postFix[i]));
       } catch (e) {
         throw e;
-      };
+      }
     }
   }
 
-  // Return the last elem inn stack which is the 
+  // Return the last elem inn stack which is the
   // result of evaluating the whole expression
   return stk.top;
 }
 
 function displayResult() {
+  if (output_screen.value === "") {
+    return;
+  }
+
   let postFix = infixToPostfix();
   try {
-    let res = calculate(postFix);  
+    let res = calculate(postFix);
     output_screen.value = res.toString();
   } catch (e) {
     output_screen.value = e.message;
