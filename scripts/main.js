@@ -1,5 +1,3 @@
-// TODO: Allow minus sign when there are no operands before - DONE
-// TODO: Change consecutive operators
 // FIXME: Add the delete button functionality
 
 import { stack } from "./stack.js";
@@ -74,10 +72,20 @@ function scrollToEnd() {
 }
 
 function appendToOutput(value) {
-  // Prevent two minus signs
-  if ((value === '-' && output_screen.value.slice(-1) === `-`) && isOperator(value)) {
+  const last_char = output_screen.value.slice(-1);
+  // Prevent consecutive minus operators
+  if (value === '-' && last_char === `-`) {
+    return;
+  // Prevent user from attempting to append an operator to a supposed negative sign
+  } else if (isOperator(value) && (last_char === `-` && isOperator(output_screen.value.slice(-2)[0]))) {
+    output_screen.value = output_screen.value.slice(0, -2) + value;
+    return;
+  // Prevent consecutive operators by changing the last to the most recent specified by user
+  } else if ((isOperator(value) && value !== '-') && isOperator(last_char)) {
+    output_screen.value = output_screen.value.slice(0, -1) + value;
     return;
   }
+
   output_screen.value += value;
   scrollToEnd();
 }
@@ -165,7 +173,6 @@ function infixToPostfix() {
       --i;
       // If is an operator
     } else if (isOperator(output_screen.value[i])) {
-        // TODO: handle negative numbers at the middle and end
         // If stack top has higher precedence
         while (
           !stk.isEmpty &&
