@@ -18,6 +18,9 @@ buttons.forEach((button) => {
 // Clear button handler
 clear_btn.addEventListener("click", clearOutput);
 
+// Delete button handler
+delete_btn.addEventListener("click", deleteOutput);
+
 // Equal button handler
 equal_btn.addEventListener("click", displayResult);
 
